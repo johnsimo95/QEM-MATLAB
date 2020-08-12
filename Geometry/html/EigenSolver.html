@@ -1,0 +1,255 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EigenSolver</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-10-25"><meta name="DC.source" content="EigenSolver.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Part C Code</a></li><li><a href="#3">Part D Code</a></li></ul></div><pre class="codeinput">clear;
+clc;
+format <span class="string">short</span>;
+</pre><h2 id="2">Part C Code</h2><pre class="codeinput">h11 = 1 - 40/pi*(0.956610);
+h13 = 40/pi*3*sqrt(3)/8;
+h31 = h13;
+h33 = 9 - 40/6;
+
+H3 = [h11 h13; h31 h33];
+
+[V3, D3] = eig(H3);
+
+<span class="comment">%parameterized function of x, with inputs a, b</span>
+fun = @(x, a, b) sin(a.*x).*sin(b.*x);
+
+<span class="comment">%Max iteration number</span>
+Nmax = 10;
+
+<span class="keyword">for</span> j = 1:Nmax;
+    H = zeros(j,j);
+
+    <span class="keyword">for</span> n = 1:j
+        <span class="keyword">for</span> m = 1:j
+            <span class="keyword">if</span> (m == n)
+                H(m,n) = (2*m-1)^2 - 40/pi*integral(@(x)fun(x,2*m-1,2*n-1),pi/3,2*pi/3); <span class="comment">%Doing 1, 3, 5...</span>
+            <span class="keyword">else</span>
+                H(m,n) = -40/pi*integral(@(x)fun(x,2*m-1,2*n-1),pi/3,2*pi/3);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    [V, D] = eig(H);
+
+    A(j).coefficiencts = V;
+    A(j).eigenvalues = D;
+
+    E1(j) = D(1,1);
+    E2(j) = 0;
+
+    <span class="keyword">if</span> j&gt;=2
+        E2(j) = D(2,2);
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+mark = <span class="string">'s'</span>;
+domain = 1:Nmax;
+
+figure(1)
+plot(1:Nmax, E1,mark, 2:Nmax, E2(2:Nmax), mark);
+title(<span class="string">"Energy Eigenvalues v.s. # of Basis Functions"</span>);
+xlabel(<span class="string">"Number of Basis Functions"</span>);
+ylabel(<span class="string">"Energy Value"</span>);
+legend(<span class="string">'E_1'</span>, <span class="string">'E_2'</span>)
+
+T = [domain; E1; E2]
+points = 1000;
+</pre><pre class="codeoutput">
+T =
+
+  Columns 1 through 7
+
+    1.0000    2.0000    3.0000    4.0000    5.0000    6.0000    7.0000
+  -11.1800  -15.1025  -15.6252  -15.6257  -15.6605  -15.6726  -15.6730
+         0    6.2558    5.8057    5.5383    5.4530    5.4500    5.4442
+
+  Columns 8 through 10
+
+    8.0000    9.0000   10.0000
+  -15.6782  -15.6798  -15.6800
+    5.4372    5.4367    5.4357
+
+</pre><img vspace="5" hspace="5" src="EigenSolver_01.png" alt=""> <h2 id="3">Part D Code</h2><pre class="codeinput">y = linspace(0, pi, points);
+coeff = A(10).coefficiencts(:,1)
+psi = zeros(1, points);
+
+
+<span class="keyword">for</span> index = 1:10
+    psi = psi + coeff(index) * demo(y, 2*index-1);
+<span class="keyword">end</span>
+
+figure(2)
+plot(y, -psi, y, demo(y,1));
+title(<span class="string">"Sum of 10 Basis Functions for Ground State"</span>);
+xlabel(<span class="string">"y"</span>);
+ylabel(<span class="string">"\psi"</span>);
+legend(<span class="string">'\psi_{calc}'</span>, <span class="string">'\psi_{single}'</span>)
+axis([0 pi 0 1.2]);
+</pre><pre class="codeoutput">
+coeff =
+
+   -0.8914
+    0.4368
+   -0.1188
+   -0.0003
+    0.0204
+   -0.0095
+   -0.0017
+    0.0047
+   -0.0023
+   -0.0007
+
+</pre><img vspace="5" hspace="5" src="EigenSolver_02.png" alt=""> <img vspace="5" hspace="5" src="EigenSolver_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear;
+clc;
+format short;
+
+%% Part C Code
+h11 = 1 - 40/pi*(0.956610);
+h13 = 40/pi*3*sqrt(3)/8;
+h31 = h13;
+h33 = 9 - 40/6;
+
+H3 = [h11 h13; h31 h33];
+
+[V3, D3] = eig(H3);
+
+%parameterized function of x, with inputs a, b
+fun = @(x, a, b) sin(a.*x).*sin(b.*x);
+
+%Max iteration number
+Nmax = 10;
+
+for j = 1:Nmax;
+    H = zeros(j,j);
+    
+    for n = 1:j
+        for m = 1:j
+            if (m == n)
+                H(m,n) = (2*m-1)^2 - 40/pi*integral(@(x)fun(x,2*m-1,2*n-1),pi/3,2*pi/3); %Doing 1, 3, 5...
+            else
+                H(m,n) = -40/pi*integral(@(x)fun(x,2*m-1,2*n-1),pi/3,2*pi/3);
+            end
+        end
+    end
+    
+    [V, D] = eig(H);
+    
+    A(j).coefficiencts = V;
+    A(j).eigenvalues = D;
+    
+    E1(j) = D(1,1);
+    E2(j) = 0;
+    
+    if j>=2
+        E2(j) = D(2,2);
+    end
+    
+end
+
+mark = 's';
+domain = 1:Nmax;
+
+figure(1)
+plot(1:Nmax, E1,mark, 2:Nmax, E2(2:Nmax), mark);
+title("Energy Eigenvalues v.s. # of Basis Functions");
+xlabel("Number of Basis Functions");
+ylabel("Energy Value");
+legend('E_1', 'E_2')
+
+T = [domain; E1; E2]
+points = 1000;
+
+
+%% Part D Code
+y = linspace(0, pi, points);
+coeff = A(10).coefficiencts(:,1)
+psi = zeros(1, points);
+
+
+for index = 1:10
+    psi = psi + coeff(index) * demo(y, 2*index-1);
+end
+
+figure(2)
+plot(y, -psi, y, demo(y,1));
+title("Sum of 10 Basis Functions for Ground State");
+xlabel("y");
+ylabel("\psi");
+legend('\psi_{calc}', '\psi_{single}')
+axis([0 pi 0 1.2]);
+
+
+
+##### SOURCE END #####
+--></body></html>

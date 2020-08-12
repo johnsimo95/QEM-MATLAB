@@ -1,0 +1,333 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pset6_p3_eigenMode</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-10-17"><meta name="DC.source" content="Pset6_p3_eigenMode.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Now error analysis</a></li></ul></div><pre class="codeinput"><span class="comment">% Using Shooting Newton Method</span>
+clear;
+clf;
+
+
+y_min = -3;
+initialValue1 = 0;
+initialValue2 = 10^-50;
+hLogLower = -4; <span class="comment">%10^hLogLower lower h bound</span>
+hLogUpper = -4; <span class="comment">%10^hLogHigher upper h bound</span>
+hIndex = 0;
+iter=0;
+maxIter = 10000;
+
+ElowerInit = 1;
+EupperInit = 1.2;
+eigError = 10^-12;
+<span class="comment">%Can set N manually too, just like this scheme better since clearer</span>
+
+<span class="keyword">for</span> h = logspace(hLogLower, hLogUpper, (hLogUpper-hLogLower +1))
+    Elower = ElowerInit;
+    Eupper = EupperInit;
+    E = (Eupper+Elower)/2;
+    iter = 0;
+
+    <span class="keyword">while</span> 1
+</pre><pre class="codeinput">        N = -ceil(y_min/h); <span class="comment">%forces integer treatment...</span>
+
+        j = linspace(-N, 1, N+2);   <span class="comment">%Maps indexing space to real space through h</span>
+
+
+        y = j*h;                <span class="comment">%Maps indexing space to real space through h</span>
+
+        j_full = linspace(-N, N, 2*N+1);
+        y_full = j_full*h;      <span class="comment">%Maps for full gaussian calculations</span>
+        normCalc = 0;
+
+        psiExact = PsiExact(y_full, 1);
+        probExact = ProbExact(y_full,1);
+        v = Quart_Pot(y);
+
+        <span class="comment">%Tests function</span>
+<span class="comment">%         figure(1);</span>
+<span class="comment">%         plot(y_full, psiExact);</span>
+<span class="comment">%         hold on;</span>
+        <span class="comment">%plot(y , v/10);</span>
+
+        psiCalc = zeros(1,N);
+        psiCalc(1) = initialValue1; <span class="comment">%sets furthest boundary</span>
+        psiCalc(2) = initialValue2; <span class="comment">%sets next value</span>
+
+        <span class="keyword">for</span> n = 2:N+1
+            <span class="comment">% Simple scheme</span>
+            <span class="comment">% psiCalc(n+1) = (-E*(h^2)+2+(h^2)*v(n))*psiCalc(n) - psiCalc(n-1);</span>
+
+            <span class="comment">% Noumerov Scheme</span>
+            psiCalc(n+1) = ((24+10*h^2*v(n)-10*h^2*E)*psiCalc(n)+(-12+h^2*v(n-1)-E*h^2)*psiCalc(n-1))/(E*h^2+12-h^2*v(n+1));
+        <span class="keyword">end</span>
+
+        psiCalcFlip = flip(psiCalc);
+        psiCalcFlip = psiCalcFlip(4:end);
+        psiCalcFull = [psiCalc, psiCalcFlip];
+
+        probCalc = psiCalcFull.^2;
+
+
+        normCalc = h*sum(probCalc);
+        normExact = h*sum(probExact);
+
+        psiCalc = psiCalc/sqrt(normCalc);<span class="comment">%Normalize original psicalc</span>
+        psiFinal = psiCalcFull/sqrt(normCalc);
+</pre><h2 id="3">Now error analysis</h2><pre class="codeinput">        iter = 1+iter;
+
+        <span class="keyword">if</span>(iter&gt;maxIter)
+            disp(<span class="string">"Convergence Failed"</span>);
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span>(eigError)&gt;abs(psiCalc(end)-psiCalc(end-2))
+            disp(<span class="string">"Solved!"</span>);
+            <span class="keyword">break</span>;
+        <span class="keyword">elseif</span> psiCalc(end)&gt;psiCalc(end-2) <span class="comment">%wavefunction diverging up, energy too low</span>
+            disp(<span class="string">"Elow, psiHigh!"</span>);
+            Elower = E;
+            E = (Eupper+Elower)/2;
+        <span class="keyword">elseif</span> psiCalc(end)&lt;psiCalc(end-2) <span class="comment">%wavefunction diverging down, energy too high</span>
+            disp(<span class="string">"Ehigh, psiLow!"</span>);
+            Eupper = E;
+            E = (Eupper+Elower)/2;
+        <span class="keyword">end</span>
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Ehigh, psiLow!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Elow, psiHigh!
+</pre><pre class="codeoutput">Solved!
+</pre><img vspace="5" hspace="5" src="Pset6_p3_eigenMode_01.png" alt=""> <pre class="codeinput">    <span class="keyword">end</span>
+
+    figure(1);
+    hold <span class="string">on</span>;
+    plot(y_full , psiFinal)
+    plot(y_full, psiExact);
+
+
+    hIndex = hIndex+1;
+    wError(hIndex) = 1/N*sum(abs(psiFinal-psiExact));
+
+<span class="keyword">end</span>
+
+<span class="comment">% % Error Plot</span>
+<span class="comment">%</span>
+<span class="comment">% figure(2);</span>
+<span class="comment">% title("3pt Shooting Newton Error")</span>
+<span class="comment">% xlabel("h")</span>
+<span class="comment">% ylabel("Error Sum (w(h))")</span>
+<span class="comment">% h = logspace(hLogLower, hLogUpper, hLogUpper - hLogLower +1);</span>
+<span class="comment">%</span>
+<span class="comment">% loglog(h, wError, '-s');</span>
+<span class="comment">% legend("Error", "O(h^4)");</span>
+<span class="comment">% hold on</span>
+<span class="comment">% loglog(h, h.^4,'--');</span>
+
+
+grid <span class="string">on</span>;
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Using Shooting Newton Method
+clear;
+clf;
+
+
+y_min = -3;
+initialValue1 = 0;
+initialValue2 = 10^-50;
+hLogLower = -4; %10^hLogLower lower h bound
+hLogUpper = -4; %10^hLogHigher upper h bound
+hIndex = 0;
+iter=0;
+maxIter = 10000;
+
+ElowerInit = 1;
+EupperInit = 1.2;
+eigError = 10^-12;
+%Can set N manually too, just like this scheme better since clearer
+
+for h = logspace(hLogLower, hLogUpper, (hLogUpper-hLogLower +1))
+    Elower = ElowerInit;
+    Eupper = EupperInit;
+    E = (Eupper+Elower)/2;
+    iter = 0;
+    
+    while 1
+        N = -ceil(y_min/h); %forces integer treatment...
+
+        j = linspace(-N, 1, N+2);   %Maps indexing space to real space through h
+
+
+        y = j*h;                %Maps indexing space to real space through h
+
+        j_full = linspace(-N, N, 2*N+1);
+        y_full = j_full*h;      %Maps for full gaussian calculations
+        normCalc = 0;
+
+        psiExact = PsiExact(y_full, 1);
+        probExact = ProbExact(y_full,1);
+        v = Quart_Pot(y);
+
+        %Tests function
+%         figure(1);
+%         plot(y_full, psiExact);
+%         hold on;
+        %plot(y , v/10);
+
+        psiCalc = zeros(1,N);
+        psiCalc(1) = initialValue1; %sets furthest boundary
+        psiCalc(2) = initialValue2; %sets next value
+
+        for n = 2:N+1
+            % Simple scheme
+            % psiCalc(n+1) = (-E*(h^2)+2+(h^2)*v(n))*psiCalc(n) - psiCalc(n-1);
+
+            % Noumerov Scheme
+            psiCalc(n+1) = ((24+10*h^2*v(n)-10*h^2*E)*psiCalc(n)+(-12+h^2*v(n-1)-E*h^2)*psiCalc(n-1))/(E*h^2+12-h^2*v(n+1));
+        end 
+
+        psiCalcFlip = flip(psiCalc);
+        psiCalcFlip = psiCalcFlip(4:end);
+        psiCalcFull = [psiCalc, psiCalcFlip];
+
+        probCalc = psiCalcFull.^2;
+
+
+        normCalc = h*sum(probCalc);
+        normExact = h*sum(probExact);
+        
+        psiCalc = psiCalc/sqrt(normCalc);%Normalize original psicalc
+        psiFinal = psiCalcFull/sqrt(normCalc);
+
+
+        %% Now error analysis
+        iter = 1+iter;
+        
+        if(iter>maxIter)
+            disp("Convergence Failed");
+            break;
+        end
+        
+        if(eigError)>abs(psiCalc(end)-psiCalc(end-2))
+            disp("Solved!");
+            break;
+        elseif psiCalc(end)>psiCalc(end-2) %wavefunction diverging up, energy too low
+            disp("Elow, psiHigh!");
+            Elower = E;
+            E = (Eupper+Elower)/2;
+        elseif psiCalc(end)<psiCalc(end-2) %wavefunction diverging down, energy too high
+            disp("Ehigh, psiLow!");
+            Eupper = E;
+            E = (Eupper+Elower)/2;
+        end
+
+    end
+
+    figure(1);
+    hold on;
+    plot(y_full , psiFinal)
+    plot(y_full, psiExact);
+    
+    
+    hIndex = hIndex+1;
+    wError(hIndex) = 1/N*sum(abs(psiFinal-psiExact));
+
+end
+
+% % Error Plot
+% 
+% figure(2);
+% title("3pt Shooting Newton Error")
+% xlabel("h")
+% ylabel("Error Sum (w(h))")
+% h = logspace(hLogLower, hLogUpper, hLogUpper - hLogLower +1);
+% 
+% loglog(h, wError, '-s');
+% legend("Error", "O(h^4)");
+% hold on
+% loglog(h, h.^4,'REPLACE_WITH_DASH_DASH');
+
+
+grid on;
+##### SOURCE END #####
+--></body></html>

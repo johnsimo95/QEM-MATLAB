@@ -1,0 +1,9 @@
+function [d,f,p,v]=gsmparameters(m,mp,n,np,l,d1,d2,z13,z23,x,y,wx,wy,rx,lx)
+mav=(m+mp)/2;
+mdel=m-mp;
+nav=(n+np)/2;
+ndel=n-np;
+d=exp(-pi*(x-l*z23*(nav/d2+mav*(z13/d1/z23)))'.^2/wx^2)*exp(-pi*(y-nav*z23/d2).^2/wy^2);
+f=exp(-2*pi*1i*x'*(ndel/d2*(1-z23/rx)+mdel/d1*(1-z13/rx)))*exp(y*0);
+p=exp(2*pi*1i*l*z13*mdel/d1*(nav/d2+mav/d1)*(1-z13/rx))*exp(2*pi*1i*l*z23*ndel/d2*(mav/d1*(1-z13/rx)-nav/d2/rx))*exp(0*x'*y);
+v=exp(-pi*(l*z23*(ndel/d2+mdel/d1+z13/z23))^2/lx^2)*exp(0*x'*y);

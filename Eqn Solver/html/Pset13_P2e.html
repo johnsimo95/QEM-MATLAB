@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pset13_P2e</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-12-05"><meta name="DC.source" content="Pset13_P2e.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Initialize</a></li><li><a href="#3">Finish Init</a></li><li><a href="#4">Section Run</a></li><li><a href="#5">To run section only</a></li></ul></div><pre class="codeinput">clear;
+</pre><h2 id="2">Initialize</h2><pre class="codeinput">Nc0 = 2*2.86E19     ; <span class="comment">% Coeff. for band edge densities of Si (Diamond same)</span>
+Nv0 = 3.1E19      ; <span class="comment">% Coeff. for band edge densities of Si (Diamond Nc0*2)</span>
+Nd = 1E15         ; <span class="comment">% Number of donors cm^-3</span>
+Eg =  5.5        ; <span class="comment">% 1.12eV Si Gap; 5.5Ev Diamond</span>
+Ed =  0.57       ; <span class="comment">% Donor level under conduction band (P in Si 0.045eV)</span>
+                    <span class="comment">%   Diamond N is 1.6eV P is 0.57eV</span>
+kb = 8.617333262145E-5  ; <span class="comment">% Boltzman const (ev/K)</span>
+
+
+Tmin = 250;
+Tmax = 3652;
+
+<span class="comment">% static temperature resolution of 1k</span>
+T_Ar = Tmin:Tmax;
+T_size = size(T_Ar);
+iterMax = T_size(1,2);
+</pre><h2 id="3">Finish Init</h2><pre class="codeinput"><span class="keyword">for</span> iter = 1:iterMax
+</pre><h2 id="4">Section Run</h2><pre class="codeinput">    T = T_Ar(iter);
+    <span class="comment">%T = 87</span>
+
+
+    Nv = Nv0*(T/300)^(3/2);
+    Nc = Nc0*(T/300)^(3/2);
+
+    <span class="comment">% OG Coefficients (break eventually at low T?)</span>
+    A = (Nd + 2*Nv*exp((Ed-Eg)/(kb*T)))/(Nv*exp(-Eg/(kb*T)));
+    B = Nc/Nv*exp((Eg/(kb*T)));
+    C = 2*Nc/Nv*exp((Eg+Ed)/(kb*T));
+
+    polyNom = [1, A, -B, -C];
+
+    fun = @(x) x^3+A*x^2-B*x-C;
+    solveRange = [0, 1E100];
+
+    y_soln = fzero(fun, solveRange);
+
+    <span class="comment">% New Coeff</span>
+<span class="comment">%     A0 = Nv*exp(-Eg/(kb*T));</span>
+<span class="comment">%     A = (Nd + 2*Nv*exp((Ed-Eg)/(kb*T)));</span>
+<span class="comment">%     B = Nc;</span>
+<span class="comment">%     C = 2*Nc*exp(Ed/(kb*T));</span>
+<span class="comment">%</span>
+<span class="comment">%     polyNom = [A0, A, -B, -C];</span>
+
+<span class="comment">%     y = roots(polyNom);</span>
+<span class="comment">%</span>
+<span class="comment">%     for index = 1:3</span>
+<span class="comment">%         if (y(index)&gt;0)&amp;&amp;(imag(y(index))==0)    %Selects only real/positive roots</span>
+<span class="comment">%             y_soln = y(index);</span>
+<span class="comment">%         end</span>
+<span class="comment">%     end</span>
+
+    Emu = kb*T*log(y_soln);
+
+    EmuAr(iter) = Emu;
+    n(iter) = Nc*exp(-Emu/(kb*T));
+    p(iter) = Nv*exp((Emu-Eg)/(kb*T));
+
+    <span class="comment">%Error tracker</span>
+<span class="comment">%     error(ei).T = T;</span>
+<span class="comment">%     error(ei).arr = y;</span>
+<span class="comment">%     error(ei).val = y_soln</span>
+<span class="comment">%     ei = ei + 1;</span>
+</pre><img vspace="5" hspace="5" src="Pset13_P2e_01.png" alt=""> <img vspace="5" hspace="5" src="Pset13_P2e_02.png" alt=""> <img vspace="5" hspace="5" src="Pset13_P2e_03.png" alt=""> <h2 id="5">To run section only</h2><pre class="codeinput"><span class="keyword">end</span>
+
+figure(1)
+plot(T_Ar,EmuAr)
+
+figure(2)
+semilogy(T_Ar,n);
+title(<span class="string">'n and p Carrier Concentrations'</span>);
+xlabel(<span class="string">'Temperature (K)'</span>);
+ylabel(<span class="string">'Carrier Density (cm^{-3})'</span>);
+hold <span class="string">on</span>;
+semilogy(T_Ar,p);
+ylim([1E12 1E18]);
+legend(<span class="string">'n Carriers'</span>, <span class="string">'p Carriers'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear;
+
+%% Initialize
+Nc0 = 2*2.86E19     ; % Coeff. for band edge densities of Si (Diamond same)
+Nv0 = 3.1E19      ; % Coeff. for band edge densities of Si (Diamond Nc0*2)
+Nd = 1E15         ; % Number of donors cm^-3
+Eg =  5.5        ; % 1.12eV Si Gap; 5.5Ev Diamond
+Ed =  0.57       ; % Donor level under conduction band (P in Si 0.045eV) 
+                    %   Diamond N is 1.6eV P is 0.57eV
+kb = 8.617333262145E-5  ; % Boltzman const (ev/K)
+
+
+Tmin = 250;
+Tmax = 3652;
+
+% static temperature resolution of 1k
+T_Ar = Tmin:Tmax;
+T_size = size(T_Ar);
+iterMax = T_size(1,2);
+
+%% Finish Init
+
+for iter = 1:iterMax
+    %% Section Run
+    T = T_Ar(iter);
+    %T = 87
+
+    
+    Nv = Nv0*(T/300)^(3/2);
+    Nc = Nc0*(T/300)^(3/2);
+
+    % OG Coefficients (break eventually at low T?)
+    A = (Nd + 2*Nv*exp((Ed-Eg)/(kb*T)))/(Nv*exp(-Eg/(kb*T)));
+    B = Nc/Nv*exp((Eg/(kb*T)));
+    C = 2*Nc/Nv*exp((Eg+Ed)/(kb*T));
+    
+    polyNom = [1, A, -B, -C];
+    
+    fun = @(x) x^3+A*x^2-B*x-C;
+    solveRange = [0, 1E100];
+    
+    y_soln = fzero(fun, solveRange); 
+    
+    % New Coeff
+%     A0 = Nv*exp(-Eg/(kb*T));
+%     A = (Nd + 2*Nv*exp((Ed-Eg)/(kb*T)));
+%     B = Nc;
+%     C = 2*Nc*exp(Ed/(kb*T));
+%     
+%     polyNom = [A0, A, -B, -C];
+    
+%     y = roots(polyNom);
+% 
+%     for index = 1:3
+%         if (y(index)>0)&&(imag(y(index))==0)    %Selects only real/positive roots
+%             y_soln = y(index);
+%         end
+%     end
+
+    Emu = kb*T*log(y_soln);
+
+    EmuAr(iter) = Emu;
+    n(iter) = Nc*exp(-Emu/(kb*T));
+    p(iter) = Nv*exp((Emu-Eg)/(kb*T));
+    
+    %Error tracker
+%     error(ei).T = T;
+%     error(ei).arr = y;
+%     error(ei).val = y_soln
+%     ei = ei + 1;
+    %% To run section only
+end
+
+figure(1)
+plot(T_Ar,EmuAr)
+
+figure(2)
+semilogy(T_Ar,n);
+title('n and p Carrier Concentrations');
+xlabel('Temperature (K)');
+ylabel('Carrier Density (cm^{-3})');
+hold on;
+semilogy(T_Ar,p);
+ylim([1E12 1E18]);
+legend('n Carriers', 'p Carriers');
+
+
+##### SOURCE END #####
+--></body></html>

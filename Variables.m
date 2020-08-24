@@ -1,5 +1,6 @@
 %% Variables
 %  This code initializes all of my workspaces with valuable constants
+cd C:\Users\johns\Documents\Github\QEM-MATLAB
 
 c.nano = 1e-9;
 c.micro = 1e-6;
@@ -23,5 +24,8 @@ c.Zo_SI = 376.730313668; %Vacuum impedence (Ohms)
 c.N_Av_SI = 6.02214076e23; %Avagadro constant (1/mol)
 c.kb_SI = 1.380649e-23; %J/k Boltzmann Constant
 c.u_bohr_SI = 9.2740100783e-24; %J/T Bohr magneton
+c.eRestMass_eV = 0.51099895e6; % eV for electron
+c.hc_eVnm= 1239.84; %eV*nm plank constant times c
+
 
 save ImpVariables.mat;

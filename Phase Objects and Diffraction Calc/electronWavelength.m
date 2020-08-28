@@ -4,8 +4,8 @@ function [lambda] = electronWavelength(KE)
 addpath('C:\Users\johns\Documents\Github\QEM-MATLAB');
 load ImpVariables.mat;
 
-pc = sqrt(KE^2 + 2*KE*c.eRestMass_eV) %output in eV still
-lambda = c.hc_eVnm/pc*c.nano %wavelength in m
+pc = (KE.^2 + 2.*KE*c.eRestMass_eV).^0.5 %output in eV still
+lambda = c.hc_eVnm./pc*c.nano %wavelength in m
 
 end
 

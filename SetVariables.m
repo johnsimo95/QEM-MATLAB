@@ -27,9 +27,10 @@ function c = SetVariables(computer)
     c.u_bohr_SI = 9.2740100783e-24; %J/T Bohr magneton
     c.eRestMass_eV = 0.51099895e6; % eV for electron
     c.hc_eVnm= 1239.84; %eV*nm plank constant times c
+    c.stephBoltz = 5.6703e-8; %W/(m^2*K^4) stephan boltzman constant;
 
 
     save ImpVariables.mat;
-    cd initDirectory;
+    cd(initDirectory);
 end
 
